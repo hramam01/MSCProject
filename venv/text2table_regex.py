@@ -71,36 +71,20 @@ for j in range(int(Key[0][1]), int(Key[1][1])):
     for k in range(0, len(y[j])):
         if y[j][k] == "Key" and y[j][k + 1][0:8] == "SFHTCM-T":
             dict[y[j][k]] = y[j][k + 1]
-            print(y[j][k + 1])
-        if y[j][k] == "Status":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Name":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Objective":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Precondition":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Coverage":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Execution date":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Estimated Time":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Actual Time":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Assignee":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Environment":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Type":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Issues":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Attachments":
-            dict[y[j][k]] = y[j][k + 1]
-        if y[j][k] == "Test Script":
-            dict[y[j][k]] = Testscripts(j, Key[1][1], 12345)
-            dict[y[j][k]] = "Tests"
+        if y[j][k] == "Status": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Name": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Objective": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Precondition": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Coverage": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Execution date": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Estimated Time": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Actual Time": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Assignee": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Environment": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Type": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Issues": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Attachments": dict[y[j][k]] = y[j][k + 1]
+        if y[j][k] == "Test Script": dict[y[j][k]] = "Tests"
     print(y[j])
 
 df = pd.DataFrame.from_dict(dict, orient='index')
