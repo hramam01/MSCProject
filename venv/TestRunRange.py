@@ -4,74 +4,23 @@ file = open(r'''/Users/hari/Desktop/CompTestResults.txt''', 'r')
 
 x = [i.strip().split('\t') for i in file.readlines()]
 y = list(filter(None, x))
+
 TestPlanRange = {}
 TestPlans = {}
 TestRunRange = {}
 TestRuns = {}
 TestScriptRange = {}
 TestScripts = {}
+TestScriptList = {}
+Scriptdetails = []
 
-print(y[30][0])
 
-for i in range(0, len(y)):
-    for j in range(0, len(y[i])):
-        if y[i][j][0:8] == "SFHTCM-P":
-            TPstarti = i
-            TPstartj = j
-            TestPlan = y[i][j]
-        if y[i][j][0:8] == "SFHTCM-R":
-            TPendi = i
-            TPendj = j
-            TestPlanRange[TestPlan] = [TPstarti,TPstartj,TPendi,TPendj]
-            TestRun = y[i][j]
-            TRstarti = i
-            TRstartj= j
-        if y[i][j][0:8] == "SFHTCM-T":
-            TRendi = i
-            TRendj = j
-            TestRunRange[TestRun] = [TRstarti, TRstartj, TRendi, TRendj]
-            TSstarti = i
-            TSstartj = j
-            TestScript = y[i][j]
-            #count = 1
-        if y[i][j] == "Test Script":
-            TSendi = i
-            TSendj = j
-            TestScriptRange[TestScript] = [TSstarti,TSstartj,TSendi,TSendj]
 
-#print(TestPlanRange)
-#print(TestRunRange)
-#print(TestScriptRange)
-
-#df = pd.DataFrame.from_dict(TestRunRange, orient='index')
 dict = {}
 
-for k,v in TestRunRange.items():
-    kind = k
+def TPRange(a):
     breakloop = False
-    for j in range(v[0],v[2]):
-        if breakloop == True: break
-        for k in range(0,len(y[j])):
-            #print(y[j][k])
-            if y[j][k] == "Name": Name = y[j+1][k]
-            if y[j][k] == "Description": Desc = y[j+1][k]
-            if y[j][k] == "Planned start date": Pstart = y[j+1][k]
-            if y[j][k] == "Planned end date": Pend = y[j+1][k]
-            if y[j][k] == "Iteration": iter1 = y[j+1][k]
-            if y[j][k] == "Status": stat = y[j+1][k]
-            if y[j][k] == "Version":
-                ver = y[j+1][k]
-                breakloop = True
-
-    TestRuns[kind] = [Name,Desc,Pstart,Pend,iter1,stat,ver]
-
-df = pd.DataFrame.from_dict(TestRuns, orient='index')
-#print(df)
-
-for k,v in TestPlanRange.items():
-    kind = k
-    breakloop = False
-    for j in range(v[0],v[2]):
+    for j in range(a,len(y)):
         if breakloop == True: break
         for k in range(0,len(y[j])):
             #print(y[j][k])
@@ -82,34 +31,112 @@ for k,v in TestPlanRange.items():
                 stat = y[j][k+1]
                 breakloop = True
 
-    TestPlans[kind] = [Key,Name,"None",stat]
+    b = [Key, Name, "None", stat]
+    return b
 
-#print(TestPlans)
-
-for k,v in TestScriptRange.items():
-    kind = k
+def TRRange(a,CurrRun):
+    #for k,v in TestRunRange.items():
+    #    kind = k
     breakloop = False
-    for j in range(v[0], v[2]):
+    for j in range(a,len(y)):
         if breakloop == True: break
         for k in range(0,len(y[j])):
-            if y[j][k] == "Status": Status = y[j][k + 1]
-            if y[j][k] == "Name": Name1 = y[j][k + 1]
-            if y[j][k] == "Objective": Obj1 = y[j][k]
-            if y[j][k] == "Precondition": precon = y[j][k + 1]
-            if y[j][k] == "Coverage": cov = y[j][k + 1]
-            if y[j][k] == "Execution date": exdate = y[j][k + 1]
-            if y[j][k] == "Estimated Time": estime = y[j][k + 1]
-            if y[j][k] == "Actual Time": actime1 = y[j][k + 1]
-            if y[j][k] == "Assignee": assignee = y[j][k + 1]
-            if y[j][k] == "Environment": env = y[j][k + 1]
-            if y[j][k] == "Type": type1 = y[j][k + 1]
-            if y[j][k] == "Issues": issues = y[j][k + 1]
-            if y[j][k] == "Attachments": attach = y[j][k + 1]
-            if y[j][k] == "Test Script": breakloop = True
-
-    TestScripts[kind] = [Status,Name1,Obj1,precon,cov,exdate,estime,assignee,env,type1,issues,attach]
+            if y[j][k] == "Name": Name = y[j+1][k]
+            if y[j][k] == "Description": Desc = y[j+1][k]
+            if y[j][k] == "Planned start date": Pstart = y[j+1][k]
+            if y[j][k] == "Planned end date": Pend = y[j+1][k]
+            if y[j][k] == "Iteration": iter1 = y[j+1][k]
+            if y[j][k] == "Status": stat = y[j+1][k]
+            if y[j][k] == "Version":
+                ver = y[j+1][k]
+                TestRunRange[CurrRun] = [Name, Desc, Pstart, Pend, iter1, stat, ver]
+                TSRange(j,CurrRun)
+                breakloop = True
+    return j
 
 
-Tscriptsdf = pd.DataFrame.from_dict(TestScripts, orient='index')
 
-print(Tscriptsdf)
+def TSRange(a,CurrRun):
+    breakloop = False
+    kind = ""
+    #TestScriptList = {}
+    for j in range(a, len(y)):
+        if breakloop == True: break
+        for k in range(0,len(y[j])):
+            if y[j][k][0:11] == "Created by": breakloop = True
+            if y[j][k][0:8] == "SFHTCM-T": kind = y[j][k]
+            if y[j][k] == "Status" and kind != "": Status = y[j][k + 1]
+            if y[j][k] == "Name" and kind != "": Name1 = y[j][k + 1]
+            if y[j][k] == "Objective" and kind != "": Obj1 = y[j][k]
+            if y[j][k] == "Precondition" and kind != "": precon = y[j][k + 1]
+            if y[j][k] == "Coverage" and kind != "": cov = y[j][k + 1]
+            if y[j][k] == "Execution date" and kind != "": exdate = y[j][k + 1]
+            if y[j][k] == "Estimated Time" and kind != "": estime = y[j][k + 1]
+            if y[j][k] == "Actual Time" and kind != "": actime1 = y[j][k + 1]
+            if y[j][k] == "Assignee" and kind != "": assignee = y[j][k + 1]
+            if y[j][k] == "Environment" and kind != "": env = y[j][k + 1]
+            if y[j][k] == "Type" and kind != "": type1 = y[j][k + 1]
+            if y[j][k] == "Issues" and kind != "": issues = y[j][k + 1]
+            if y[j][k] == "Attachments" and kind != "": attach = y[j][k + 1]
+            if y[j][k] == "Test Script" and kind != "":
+                TestScriptList[kind] = [Status, Name1, Obj1, precon, cov, exdate, estime, assignee, env, type1, issues,attach]
+                breakloop = True
+                TScripts(j,kind,CurrRun)
+    #return j
+
+def TScripts(a,kind,CurrRun):
+    Scriptdetails = []
+    count = 1
+    breakloop = False
+    for Scripts in range(a+1, len(y)):
+        ActRes = ""
+        attch = ""
+        if breakloop == True: break
+        for ScriptDets in range(0, len(y[Scripts])):
+            if y[Scripts][0:11] == "Created by":
+                #print(CurrRun,Scripts)
+                breakloop = True
+            if y[Scripts][ScriptDets] == "Status": stat1 = y[Scripts][ScriptDets]
+            if y[Scripts][ScriptDets] == "Details":
+                dets = ""
+                while y[Scripts + 1][ScriptDets] != "Test Data":
+                    dets = y[Scripts + 1][ScriptDets] + dets
+                    Scripts += 1
+            if y[Scripts][ScriptDets] == "Test Data": TData = y[Scripts][ScriptDets]
+            if y[Scripts][ScriptDets] == "Expected Result":
+                while y[Scripts][ScriptDets] != "Actual Result":
+                    ExpRes = y[Scripts][ScriptDets]
+                    Scripts+=1
+            if y[Scripts][ScriptDets] == "Actual Result":
+                while y[Scripts][ScriptDets] != "Attachments":
+                    ActRes = y[Scripts][ScriptDets]
+                    Scripts+=1
+            if y[Scripts][ScriptDets] == "Attachments":
+                while y[Scripts][ScriptDets] != "Issues":
+                    attch = y[Scripts][ScriptDets]
+                    Scripts+=1
+            if y[Scripts][ScriptDets] == "Issues":
+                issues = y[Scripts][ScriptDets]
+                Scriptdetails.append([count,stat1, dets, ExpRes, ActRes, attch, issues])
+                count+=1
+            elif y[Scripts][ScriptDets][0:8] == "SFHTCM-T":
+                count=1
+                TestScripts[kind] = Scriptdetails
+                TestRuns[CurrRun] = TestScripts
+                breakloop = True
+                TSRange(Scripts,CurrRun)
+
+for i in range(0, len(y)):
+    for j in range(0, len(y[i])):
+        if y[i][j][0:8] == "SFHTCM-P":
+            TestPlan = y[i][j]
+            TestPlans[TestPlan] = TPRange(i)
+        if y[i][j][0:8] == "SFHTCM-R":
+            CurrRun = y[i][j]
+            i = TRRange(i,CurrRun)
+            #print(i)
+
+
+df = pd.DataFrame.from_dict(TestRuns, orient='index')
+
+print(df)
