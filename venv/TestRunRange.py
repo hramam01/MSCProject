@@ -1,9 +1,13 @@
 import pandas as pd
+import time
 
-file = open(r'''/Users/hari/Desktop/CompTestResults.txt''', 'r')
+#file = open(r'''/Users/hari/Desktop/CompTestResults.txt''', 'r')
+file = open(r'''/Users/hari/Desktop/UAT Week 1.txt''', 'r')
 
 x = [i.strip().split('\t') for i in file.readlines()]
-y = list(filter(None, x))
+#y = list(filter(None, x))
+y=x
+
 
 TestPlanRange = {}
 TestPlans = {}
@@ -60,6 +64,18 @@ def TSRange(a,CurrRun):
     breakloop = False
     kind = ""
     #TestScriptList = {}
+    Status=""
+    Name1 = ""
+    precon=""
+    cov=""
+    exdate=""
+    estime=""
+    actime1 =""
+    assignee=""
+    env=""
+    type1 = ""
+    issues=""
+    attach=""
     for j in range(a, len(y)):
         if breakloop == True: break
         for k in range(0,len(y[j])):
@@ -68,7 +84,7 @@ def TSRange(a,CurrRun):
             if y[j][k] == "Status" and kind != "": Status = y[j][k + 1]
             if y[j][k] == "Name" and kind != "": Name1 = y[j][k + 1]
             if y[j][k] == "Objective" and kind != "": Obj1 = y[j][k]
-            if y[j][k] == "Precondition" and kind != "": precon = y[j][k + 1]
+            #if y[j][k] == "Precondition" and kind != "" and len(y[j]): precon = y[j][k + 1]
             if y[j][k] == "Coverage" and kind != "": cov = y[j][k + 1]
             if y[j][k] == "Execution date" and kind != "": exdate = y[j][k + 1]
             if y[j][k] == "Estimated Time" and kind != "": estime = y[j][k + 1]
@@ -79,7 +95,7 @@ def TSRange(a,CurrRun):
             if y[j][k] == "Issues" and kind != "": issues = y[j][k + 1]
             if y[j][k] == "Attachments" and kind != "": attach = y[j][k + 1]
             if y[j][k] == "Test Script" and kind != "":
-                TestScriptList[kind] = [Status, Name1, Obj1, precon, cov, exdate, estime, assignee, env, type1, issues,attach]
+                TestScriptList[kind] = [Status, Name1, Obj1, precon, exdate, estime, assignee, env, type1, issues,attach]
                 breakloop = True
                 TScripts(j,kind,CurrRun)
     #return j
@@ -126,6 +142,7 @@ def TScripts(a,kind,CurrRun):
                 breakloop = True
                 TSRange(Scripts,CurrRun)
 
+starttime= time.time()
 for i in range(0, len(y)):
     for j in range(0, len(y[i])):
         if y[i][j][0:8] == "SFHTCM-P":
@@ -133,7 +150,7 @@ for i in range(0, len(y)):
             TestPlans[TestPlan] = TPRange(i)
         if y[i][j][0:8] == "SFHTCM-R":
             CurrRun = y[i][j]
-            i = TRRange(i,CurrRun)
+            TRRange(i,CurrRun)
             #print(i)
 
 
@@ -141,3 +158,5 @@ df = pd.DataFrame.from_dict(TestRuns, orient='index')
 
 
 print(df)
+diff = time.time()-starttime
+print(diff)
