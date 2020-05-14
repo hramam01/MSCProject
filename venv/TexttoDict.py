@@ -1,8 +1,8 @@
 import pandas as pd
 import time
 
-#file = open(r'''/Users/hari/Desktop/CompTestResults.txt''', 'r')
-file = open(r'''/Users/hari/Desktop/UAT Week 1.txt''', 'r')
+file = open(r'''/Users/hari/Desktop/CompTestResults.txt''', 'r')
+#file = open(r'''/Users/hari/Desktop/UAT Week 1.txt''', 'r')
 
 x = [i.strip().split('\t') for i in file.readlines()]
 flat_list = []
@@ -185,8 +185,9 @@ for k,v in TestRuns.items():
         TestSummary[i] = [necount,passcount,failcount]
 #df = pd.DataFrame.from_dict(TestRuns["SFHTCM-R553"], orient='index')
 df = pd.DataFrame.from_dict(TestSummary, orient='index')
-df.to_html('Table.html')
-print(df)
+#df.to_html('Table.html')
+#print(df)
+df.plot.bar(rot=0)
 #print(TestRuns["SFHTCM-R556"]["SFHTCM-T771"])
 #print(TestSummary)
 diff = time.time()-starttime

@@ -1,6 +1,6 @@
 import pandas as pd
 
-file = open(r'''/Users/hari/Desktop/UAT Week 1.txt''', 'r')
+file = open(r'''/Users/hari/Desktop/New Report from JIRA.txt''', 'r')
 
 x = [i.strip().split('\t') for i in file.readlines()]
 

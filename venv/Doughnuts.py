@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-# Make data: I have 3 groups and 7 subgroups
+# Make data
 layer1names = ['Integration', ' ']
 layer1 = [88, 12]
 layer2names = ['Security', '']
