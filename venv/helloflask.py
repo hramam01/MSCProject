@@ -5,6 +5,7 @@ from bokeh.client import pull_session
 from bokeh.embed import server_session
 
 import pandas as pd
+import numpy as np
 
 app = Flask(__name__)
 
@@ -27,6 +28,8 @@ def svgtest():
   process = pd.read_excel('/Users/hari/Desktop/Process.xlsx')
   steps = process['Process Step From']
   owner = process['Owner'].unique()
+  process['Takttime'] = process['Effort'].sum() / len(process)
+  process['colors'] = np.where(process['Takttime'] >= process['Effort'], 'green', 'orange')
 
   dot1 = Digraph()
   dot1.graph_attr["splines"] = "line"
@@ -45,8 +48,9 @@ def svgtest():
       with dot1.subgraph(name=cname) as c:
           c.attr(style='filled', color='lightgrey',fontsize='20',label=str(owners))
           for index, row in processi.iterrows():
-              c.node(row['Process Step From'], shape='box',width='3', height='.5',fixedsize='true',style='filled', color='white',fontsize='20')
-              c.node_attr['href'] = '#'
+              c.node(row['Process Step From'],,shape='box',width='3', height='.5',fixedsize='true',style='filled', color=row['colors'],fontsize='20')
+              c.node_attr['color'] = row['colors']
+              #c.node_attr['href'] = '#'
   for i, val in enumerate(steps):
       if i == 0:
           prev = val
