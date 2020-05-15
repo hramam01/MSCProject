@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Graphviz</title>
+</head>
+<body>
+    {% extends "template.html" %}
+
+    {% block content %}
+
+    <div class="row">
+        <div class="col-md-6">{{chart_output1|safe}}</div>
+        <div class="col-md-6">
+            <H2>Testing</H2>
+
+        </div>
+
+    </div>
+
+
+    {% endblock %}
+</body>
+</html>
