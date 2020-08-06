@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from graphviz import Digraph
+import matplotlib
+import graphviz
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -29,7 +31,7 @@ def table():
     return render_template("Table.html")
 
 
-@app.route("/svgtest")
+@app.route("/svgtest",methods=['GET'])
 def svgtest():
   process = pd.read_excel('/Users/hari/Desktop/Process.xlsx')
   steps = process['Process Step From']
@@ -61,9 +63,10 @@ def svgtest():
               c.node_attr['fixedsize'] = 'true'
               c.node_attr['style'] = 'filled'
               c.node_attr['fontsize'] = '20'
-              #c.node_attr['color'] = 'lightgrey'
+              c.node_attr['color'] = 'lightgrey'
               c.node_attr['color'] = row['colors']
               c.node_attr['href'] = '#'
+
   for i, val in enumerate(steps):
       if i == 0:
           prev = val
@@ -72,14 +75,8 @@ def svgtest():
           dot1.edge_attr['arrowhead'] = 'normal'
 
           prev = val
+
   chart_output1 = dot1.pipe(format='svg').decode("utf-8")
-
-  fig = plt.figure(figsize=(15, 10))
-  ax = fig.add_subplot(1, 1, 1)
-  ax.set_xlabel('Process Step', fontsize=15)
-  ax.set_ylabel('Step Effort', fontsize=15)
-  ax.set_title('Load Chart', fontsize=20)
-
 
   return render_template('svgtest.html', chart_output1=chart_output1)
 
